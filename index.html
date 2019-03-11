@@ -1,0 +1,68 @@
+<html>
+<head><title>Demo</title>
+</head>
+<body>
+<input type="file" id="file-input" />
+<div style="
+    position: absolute;
+    width: 60px;
+    background: lightgray;
+    height: 200px;
+">
+    <div id="sensor_1" style="display: block; border-radius: 20px; width: 20px; height: 20px; background: white; left: 20px; top: 20px; position: relative"></div>
+    <div id="sensor_2" style="display: block; border-radius: 20px; width: 20px; height: 20px; background: white; left: 20px; top: 120px; position: relative"></div>
+</div>
+<script>
+    var lines = [];
+    var counter = 0;
+    function readSingleFile(e) {
+
+
+        var file = e.target.files[0];
+        if (!file) {
+            return;
+        }
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            var contents = e.target.result;
+
+            var allLines = contents.split("\n");
+            lines = allLines.slice(2);
+
+        };
+        reader.readAsText(file);
+    }
+
+    function displayContents(contents) {
+
+    }
+
+    function showValue () {
+        var sensor_1 = document.getElementById('sensor_1');
+        sensor_1.style.background = "blue";
+        var sensor_2 = document.getElementById('sensor_2');
+        sensor_2.style.background = "red";
+
+        if (lines.length > counter) {
+
+            console.log(lines[counter]);
+            var values = lines[counter].split(";");
+
+            sensor_1.style.opacity = values [1] / 100;
+            sensor_2.style.opacity = values [2] / 100;
+
+            counter++;
+            if (counter > values.length) {
+                counter = 0;
+            }
+        }
+    }
+
+    document.getElementById('file-input').addEventListener('change', readSingleFile, false);
+
+    setInterval(showValue, 50);
+
+</script>
+
+</body>
+</html>
